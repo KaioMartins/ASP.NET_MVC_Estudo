@@ -1,4 +1,6 @@
-﻿@model IEnumerable<TreinaWeb.Musicas.Dominio.Album>
+﻿@* Lista de objetos do tipo 'Album'
+    view fortemente tipada *@
+@model IEnumerable<TreinaWeb.Musicas.Dominio.Album>
 
 @{
     ViewBag.Title = "Index";
@@ -7,6 +9,7 @@
 <h2>Index</h2>
 
 <p>
+    @* Link sempre faz requisição por GET *@
     @Html.ActionLink("Create New", "Create")
 </p>
 <table class="table">
@@ -41,6 +44,8 @@
             @Html.DisplayFor(modelItem => item.Email)
         </td>
         <td>
+            @* 'new { id=item.Id }' parametros anonimos que são passados para o navegador, para pegar
+                o ID do album e enviar para o Navegador, para montar o link *@
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.Id })

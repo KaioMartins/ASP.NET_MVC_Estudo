@@ -16,6 +16,9 @@ namespace TreinaWeb.Musicas.Web.Controllers
         private MusicasDbContext db = new MusicasDbContext();
 
         // GET: Albuns
+        //Exibe a lista do que está cadastrado no banco
+        //pega o set do DbContext e envia para a lista
+        //Similar ao 'select * from'
         public ActionResult Index()
         {
             return View(db.Albuns.ToList());
@@ -39,6 +42,8 @@ namespace TreinaWeb.Musicas.Web.Controllers
         // GET: Albuns/Create
         public ActionResult Create()
         {
+            //return View() sem parametrização: é retornada a View de acordo com o nome da action
+            //só irá renderizar uma página
             return View();
         }
 
@@ -47,8 +52,10 @@ namespace TreinaWeb.Musicas.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //Submissão para o servidor é sempre por POST
         public ActionResult Create([Bind(Include = "Id,Nome,Ano,Observacoes,Email")] Album album)
         {
+            //verificação ServerSide
             if (ModelState.IsValid)
             {
                 db.Albuns.Add(album);
@@ -106,6 +113,8 @@ namespace TreinaWeb.Musicas.Web.Controllers
         }
 
         // POST: Albuns/Delete/5
+        //ActionName("Delete") = define o nome do nome da action como 'Delete' e também
+        // como também 'DeleteConfirmed', pois o asp.net não iria conseguir diferenciar
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
