@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AutoMapper;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -8,6 +9,7 @@ using System.Web;
 using System.Web.Mvc;
 using TreinaWeb.Musicas.AcessoDados.Entity.Context;
 using TreinaWeb.Musicas.Dominio;
+using TreinaWeb.Musicas.Web.ViewModels.Album;
 
 namespace TreinaWeb.Musicas.Web.Controllers
 {
@@ -21,7 +23,8 @@ namespace TreinaWeb.Musicas.Web.Controllers
         //Similar ao 'select * from'
         public ActionResult Index()
         {
-            return View(db.Albuns.ToList());
+            //mudar a propriedade padrão gerada pelo Scaffolding
+            return View(Mapper.Map<List<Album>, List<AlbumIndexViewModel>>(db.Albuns.ToList()));
         }
 
         // GET: Albuns/Details/5
@@ -53,17 +56,18 @@ namespace TreinaWeb.Musicas.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         //Submissão para o servidor é sempre por POST
-        public ActionResult Create([Bind(Include = "Id,Nome,Ano,Observacoes,Email")] Album album)
+        public ActionResult Create([Bind(Include = "Id,Nome,Ano,Observacoes,Email")] AlbumViewModel viewModel)
         {
             //verificação ServerSide
             if (ModelState.IsValid)
             {
+                Album album = Mapper.Map<AlbumViewModel, Album>(viewModel);
                 db.Albuns.Add(album);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            return View(album);
+            return View(viewModel);
         }
 
         // GET: Albuns/Edit/5
@@ -78,7 +82,7 @@ namespace TreinaWeb.Musicas.Web.Controllers
             {
                 return HttpNotFound();
             }
-            return View(album);
+            return View(Mapper.Map<Album, AlbumViewModel>(album));
         }
 
         // POST: Albuns/Edit/5
@@ -86,15 +90,16 @@ namespace TreinaWeb.Musicas.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nome,Ano,Observacoes,Email")] Album album)
+        public ActionResult Edit([Bind(Include = "Id,Nome,Ano,Observacoes,Email")] AlbumViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                Album album = Mapper.Map<AlbumViewModel, Album>(viewModel);
                 db.Entry(album).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return View(album);
+            return View(viewModel);
         }
 
         // GET: Albuns/Delete/5
@@ -125,6 +130,10 @@ namespace TreinaWeb.Musicas.Web.Controllers
             return RedirectToAction("Index");
         }
 
+        //É executado para remvover objetos de memória
+        //é feito o override para ser feito o fechamento da conexão com o banco quando 
+        // o Controller parar a execução, pois senão o objeto do Controller somente é retirado de memória
+        // e a conexão com o banco fica aberta
         protected override void Dispose(bool disposing)
         {
             if (disposing)
