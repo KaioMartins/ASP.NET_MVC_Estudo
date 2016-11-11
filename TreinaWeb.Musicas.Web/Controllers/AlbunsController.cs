@@ -9,13 +9,17 @@ using System.Web;
 using System.Web.Mvc;
 using TreinaWeb.Musicas.AcessoDados.Entity.Context;
 using TreinaWeb.Musicas.Dominio;
+using TreinaWeb.Musicas.Repositorios.Entity;
 using TreinaWeb.Musicas.Web.ViewModels.Album;
+using TreinaWeb.Repositorios.Comum;
 
 namespace TreinaWeb.Musicas.Web.Controllers
 {
     public class AlbunsController : Controller
     {
-        private MusicasDbContext db = new MusicasDbContext();
+        //private MusicasDbContext db = new MusicasDbContext();
+        private IRepositorioGenerico<Album, int> repositorioAlbums = 
+            new AlbunsRepositorio(new MusicasDbContext());
 
         // GET: Albuns
         //Exibe a lista do que está cadastrado no banco
@@ -24,7 +28,7 @@ namespace TreinaWeb.Musicas.Web.Controllers
         public ActionResult Index()
         {
             //mudar a propriedade padrão gerada pelo Scaffolding
-            return View(Mapper.Map<List<Album>, List<AlbumIndexViewModel>>(db.Albuns.ToList()));
+            return View(Mapper.Map<List<Album>, List<AlbumExibicaoViewModel>>(repositorioAlbums.Selecionar()));
         }
 
         // GET: Albuns/Details/5
@@ -34,12 +38,13 @@ namespace TreinaWeb.Musicas.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albuns.Find(id);
+            //id.Value -> necessário especificar pois no repositorio está como int o Id
+            Album album = repositorioAlbums.SelecionarPorId(id.Value);
             if (album == null)
             {
                 return HttpNotFound();
             }
-            return View(album);
+            return View(Mapper.Map<Album, AlbumExibicaoViewModel>(album));
         }
 
         // GET: Albuns/Create
@@ -62,8 +67,7 @@ namespace TreinaWeb.Musicas.Web.Controllers
             if (ModelState.IsValid)
             {
                 Album album = Mapper.Map<AlbumViewModel, Album>(viewModel);
-                db.Albuns.Add(album);
-                db.SaveChanges();
+                repositorioAlbums.Inserir(album);
                 return RedirectToAction("Index");
             }
 
@@ -77,11 +81,12 @@ namespace TreinaWeb.Musicas.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albuns.Find(id);
+            Album album = repositorioAlbums.SelecionarPorId(id.Value);
             if (album == null)
             {
                 return HttpNotFound();
             }
+            //conversão de viewModel para dominio
             return View(Mapper.Map<Album, AlbumViewModel>(album));
         }
 
@@ -95,8 +100,7 @@ namespace TreinaWeb.Musicas.Web.Controllers
             if (ModelState.IsValid)
             {
                 Album album = Mapper.Map<AlbumViewModel, Album>(viewModel);
-                db.Entry(album).State = EntityState.Modified;
-                db.SaveChanges();
+                repositorioAlbums.Alterar(album);
                 return RedirectToAction("Index");
             }
             return View(viewModel);
@@ -109,12 +113,13 @@ namespace TreinaWeb.Musicas.Web.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Album album = db.Albuns.Find(id);
+            Album album = repositorioAlbums.SelecionarPorId(id.Value);
             if (album == null)
             {
                 return HttpNotFound();
             }
-            return View(album);
+            //conversão de viewModel para dominio
+            return View(Mapper.Map<Album, AlbumExibicaoViewModel>(album));
         }
 
         // POST: Albuns/Delete/5
@@ -124,9 +129,7 @@ namespace TreinaWeb.Musicas.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Album album = db.Albuns.Find(id);
-            db.Albuns.Remove(album);
-            db.SaveChanges();
+            repositorioAlbums.ExcluirPorId(id);
             return RedirectToAction("Index");
         }
 
@@ -134,13 +137,14 @@ namespace TreinaWeb.Musicas.Web.Controllers
         //é feito o override para ser feito o fechamento da conexão com o banco quando 
         // o Controller parar a execução, pois senão o objeto do Controller somente é retirado de memória
         // e a conexão com o banco fica aberta
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //NÃO É NECESSÁRIO POIS O DBCONTEXT NÃO ESTÁ MAIS NO CONTROLLER
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

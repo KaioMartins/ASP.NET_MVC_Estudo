@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace TreinaWeb.Musicas.Dominio
 {
+    //public class para ser visualizada por todas as camadas
     public class Album
     {
         public int Id { get; set; }

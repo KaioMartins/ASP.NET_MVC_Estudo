@@ -157,6 +157,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Annotations\EmailTreinaWebAttribute.cs" />
     <Compile Include="App_Start\AutoMapperConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -231,6 +232,10 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KaioMartins.Repositorios.Comum\TreinaWeb.Repositorios.Comum.csproj">
+      <Project>{88036df3-70ec-4e13-b22e-94b85b04896f}</Project>
+      <Name>TreinaWeb.Repositorios.Comum</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TreinaWeb.Comum.Entity\TreinaWeb.Comum.Entity.csproj">
       <Project>{2e9ce0eb-bcff-4163-8f56-cdebcde8cefe}</Project>
       <Name>TreinaWeb.Comum.Entity</Name>
@@ -242,6 +247,14 @@
     <ProjectReference Include="..\TreinaWeb.Musicas.Dominio\TreinaWeb.Musicas.Dominio.csproj">
       <Project>{e2bcb1b8-7f08-4195-a05b-9a331e4e9952}</Project>
       <Name>TreinaWeb.Musicas.Dominio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreinaWeb.Musicas.Repositorios.Entity\TreinaWeb.Musicas.Repositorios.Entity.csproj">
+      <Project>{b7460508-18b1-4b46-b92c-3768b5ac98ac}</Project>
+      <Name>TreinaWeb.Musicas.Repositorios.Entity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TreinaWeb.Repositorios.Comum.Entity\TreinaWeb.Repositorios.Comum.Entity.csproj">
+      <Project>{2c03e7d6-9fae-4435-b9c1-aecd75325381}</Project>
+      <Name>TreinaWeb.Repositorios.Comum.Entity</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -6,7 +6,7 @@ using System.Web;
 
 namespace TreinaWeb.Musicas.Web.ViewModels.Album
 {
-    public class AlbumIndexViewModel
+    public class AlbumExibicaoViewModel
     {
         public int Id { get; set; }
 
