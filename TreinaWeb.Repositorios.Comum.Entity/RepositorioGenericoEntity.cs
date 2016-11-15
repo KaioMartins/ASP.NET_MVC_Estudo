@@ -15,7 +15,9 @@ namespace TreinaWeb.Repositorios.Comum.Entity
     {
 
         //campo privado que irá armazenar o contexto de dados recebido pelo DbContext
-        private DbContext _contexto;
+        //protected para ser acessado por outras classes, e possibilitar o Override
+        //somente as classes mães e filhas irão enxergar
+        protected DbContext _contexto;
 
         //instalar Entity para usar o DbContext
         public RepositorioGenericoEntity(DbContext contexto)
@@ -55,12 +57,13 @@ namespace TreinaWeb.Repositorios.Comum.Entity
             _contexto.SaveChanges();
         }
 
-        public List<TEntidade> Selecionar()
+        //Alterado para virtual para deixar fazer Override quando necessário
+        public virtual List<TEntidade> Selecionar()
         {
             return _contexto.Set<TEntidade>().ToList();
         }
 
-        public TEntidade SelecionarPorId(TChave id)
+        public virtual TEntidade SelecionarPorId(TChave id)
         {
             return _contexto.Set<TEntidade>().Find(id);
         }

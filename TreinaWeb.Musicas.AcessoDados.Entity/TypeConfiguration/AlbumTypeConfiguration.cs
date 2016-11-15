@@ -44,7 +44,10 @@ namespace TreinaWeb.Musicas.AcessoDados.Entity.TypeConfiguration
 
         protected override void ConfigurarChavesEstrangeiras()
         {
-            
+            //um Album tem varias Musicas
+            //HasMany(p => p.Musicas) 
+            //    .WithRequired(p => p.Album) //Album é obrigatorio para Musicas
+            //    .HasForeignKey(fk => fk.idAlbum); //em Musicas está associado o idAlbum como FK
         }
 
         protected override void ConfigurarNomeTabela()
